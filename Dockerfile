@@ -10,6 +10,9 @@ COPY tsconfig.json ./
 COPY src ./src
 RUN npm run build
 
+# Drop dev dependencies so node_modules can be reused as-is in the runtime stage
+RUN npm prune --omit=dev
+
 # Runtime stage: only production dependencies and compiled output
 FROM node:26.12.1-alpine
 
@@ -20,10 +23,12 @@ ENV NODE_ENV=production
 ENV HOST=0.0.0.0
 ENV PORT=3000
 
-COPY package*.json ./
-RUN npm ci --omit=dev
-
+COPY --from=build /usr/src/app/package*.json ./
+COPY --from=build /usr/src/app/node_modules ./node_modules
 COPY --from=build /usr/src/app/dist ./dist
+
+# Run as the unprivileged user provided by the node image
+USER node
 
 EXPOSE 3000
 

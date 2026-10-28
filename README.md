@@ -11,6 +11,13 @@
 
 And you are done ! Now you can edit the *fully typed* file [filterConfiguration.json](src/filterConfiguration.json), to filter as you would like your webhooks.
 
+### With Docker Compose
+
+- Copy [.env.example](.env.example) to `.env` and set `WEBHOOK_URL`
+- Run `docker compose up -d` [^1]
+
+The port on the host can be configured using [the compose file](compose.yml). The [filterConfiguration.json](src/filterConfiguration.json) is mounted into the container, to apply changes, restart the container with `docker compose restart`[^2].
+
 ## Configuration
 
 ### Environment variables
@@ -42,3 +49,6 @@ If you want to test locally, you will need to redirect the webhook sent by Githu
 You can also have access to the recent deliveries of a webhook, as explained here: https://docs.github.com/en/developers/webhooks-and-events/webhooks/testing-webhooks.
 
 To generate new events json schema, add them to the file `events/index.ts` and run the command `npm run generate-schemas`.
+
+[^1]: Or with `podman compose up -d`
+[^2]: Or with `podman compose restart`
