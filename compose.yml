@@ -1,0 +1,15 @@
+services:
+  github-webhook-filter:
+    image: ghcr.io/rezoleo/github-webhook-filter:1.0.0
+    container_name: github-webhook-filter
+    ports:
+      - 3000:3000
+    environment:
+      # URL to send the events to
+      - WEBHOOK_URL=${WEBHOOK_URL:?WEBHOOK_URL is required}
+      # Choose wether to block events other than those defined in filterConfiguration
+      - BLOCK_UNDEFINED_EVENTS=${BLOCK_UNDEFINED_EVENTS:-false}
+    volumes:
+      # Edit the filters without rebuilding the image, restart the container to apply them
+      - ./src/filterConfiguration.json:/usr/src/app/dist/src/filterConfiguration.json:ro,z
+    restart: unless-stopped
