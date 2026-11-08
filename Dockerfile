@@ -1,7 +1,7 @@
 # Build stage: compile the TypeScript sources
 FROM node:26.12.1-alpine AS build
 
-WORKDIR /usr/src/app
+WORKDIR /app
 
 COPY package*.json ./
 RUN npm ci
@@ -16,16 +16,17 @@ RUN npm prune --omit=dev
 # Runtime stage: only production dependencies and compiled output
 FROM node:26.12.1-alpine
 
-WORKDIR /usr/src/app
+WORKDIR /app
 
 ENV NODE_ENV=production
 # Listen on all interfaces so the server is reachable from outside the container
 ENV HOST=0.0.0.0
 ENV PORT=3000
 
-COPY --from=build /usr/src/app/package*.json ./
-COPY --from=build /usr/src/app/node_modules ./node_modules
-COPY --from=build /usr/src/app/dist ./dist
+COPY --from=build --chown=node:node /app/package*.json ./
+COPY --from=build --chown=node:node /app/node_modules ./node_modules
+COPY --from=build --chown=node:node /app/dist ./dist
+
 
 # Run as the unprivileged user provided by the node image
 USER node
