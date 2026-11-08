@@ -11,5 +11,5 @@ services:
       - BLOCK_UNDEFINED_EVENTS=${BLOCK_UNDEFINED_EVENTS:-false}
     volumes:
       # Edit the filters without rebuilding the image, restart the container to apply them
-      - ./src/filterConfiguration.json:/usr/src/app/dist/src/filterConfiguration.json:ro,z
+      - ./src/filterConfiguration.json:/usr/src/app/dist/src/filterConfiguration.json:ro
     restart: unless-stopped
