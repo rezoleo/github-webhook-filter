@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "prebuild": "rm -rf dist",
-    "build": "tsc -p tsconfig.json & npm run copyfiles",
+    "build": "tsc -p tsconfig.json && npm run copyfiles",
     "copyfiles": "copyfiles package* dist",
     "start": "node dist/src/server.js",
     "watch": "ts-node-dev src/server.ts",

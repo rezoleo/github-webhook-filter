@@ -13,3 +13,12 @@ server.listen({host: process.env.HOST || "127.0.0.1", port: Number(process.env.P
   }
   server.log.info(`Server listening at ${address}`);
 });
+
+async function closeGracefully(signal: NodeJS.Signals) {
+  server.log.info(`Received signal to terminate: ${signal}`);
+
+  await server.close();
+  process.kill(process.pid, signal);
+}
+process.once('SIGINT', closeGracefully);
+process.once('SIGTERM', closeGracefully);
